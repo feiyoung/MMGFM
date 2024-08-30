@@ -97,7 +97,7 @@ initialize_MSFR <- function(XList, ZList, numvarmat,tauList=NULL,  q, qs,
 #' @param maxIter the maximum iteration of the VEM algorithm. The default is 30.
 #' @param verbose a logical value, whether output the information in iteration.
 #' @param seed an optional integer, specify the random seed for reproducibility in initialization.
-#' return a list including the following components:
+#' @return return a list including the following components:
 #' \itemize{
 #'   \item \code{hbeta} - a M-length list composed by the estimated regression coefficient matrix for each modality;
 #'   \item \code{hA} - a M-length list composed by the loading matrix corresponding to study-shared factors for each modality;
@@ -115,8 +115,8 @@ initialize_MSFR <- function(XList, ZList, numvarmat,tauList=NULL,  q, qs,
 #'   \item \code{ELBO_seq} - the sequence of ELBO values.
 #'   \item \code{time_use} - the running time in model fitting of SpaCOAP;
 #' }
-#' @details If \code{init="MSFRVI"}, it will use the results from multi-study linear factor model as initial values; If \code{init="LFM"}, it will use the results from linear factor model by combing data from all studies as initials.
-#' @seealso \code{\link{MSFRVI}}
+#' @details If \code{init="MSFRVI"}, it will use the results from multi-study linear factor model in MultiCOAP package as initial values; If \code{init="LFM"}, it will use the results from linear factor model by combing data from all studies as initials.
+#' @seealso None
 #' @references None
 #' @export
 #' @useDynLib MMGFM, .registration = TRUE
@@ -520,7 +520,7 @@ chooseone <- function(x) {
 #' @param maxIter the maximum iteration of the VEM algorithm. The default is 30.
 #' @param verbose a logical value, whether output the information in iteration.
 #' @param seed an optional integer, specify the random seed for reproducibility in initialization.
-#' return a list with two components: q and qs.vec.
+#' @return return a list with two components: q and qs.vec.
 #'
 #' @export
 #'

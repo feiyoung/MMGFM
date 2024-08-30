@@ -42,8 +42,10 @@ selectFac.MMGFM(
 
 \item{verbose}{a logical value, whether output the information in iteration.}
 
-\item{seed}{an optional integer, specify the random seed for reproducibility in initialization.
-return a list with two components: q and qs.vec.}
+\item{seed}{an optional integer, specify the random seed for reproducibility in initialization.}
+}
+\value{
+return a list with two components: q and qs.vec.
 }
 \description{
 Select the number of study-shared and study-specified factors for the high-dimensional multi-study multi-modality covariate-augmented generalized factor model.

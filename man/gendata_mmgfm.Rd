@@ -42,7 +42,9 @@ gendata_mmgfm(
 
 \item{sigma_eps}{a positive real, the variance of overdispersion error; default as 1.}
 
-\item{heter_error}{a logical value, whether to generate the heterogeneous error; default as FALSE.
+\item{heter_error}{a logical value, whether to generate the heterogeneous error; default as FALSE.}
+}
+\value{
 return a list including the following components:
 \itemize{
   \item \code{hbeta} - a M-length list composed by the estimated regression coefficient matrix for each modality;
@@ -60,7 +62,7 @@ return a list including the following components:
   \item \code{ELBO} -  the ELBO value when algorithm stops;
   \item \code{ELBO_seq} - the sequence of ELBO values.
   \item \code{time_use} - the running time in model fitting of SpaCOAP;
-}}
+}
 }
 \description{
 Generate simulated data from MMGFM models

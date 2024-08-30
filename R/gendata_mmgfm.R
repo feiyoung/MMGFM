@@ -12,7 +12,7 @@
 #' @param n_bin a positive integer, specify the number of trails when generate Binomial modality matrix; default as 1.
 #' @param sigma_eps a positive real, the variance of overdispersion error; default as 1.
 #' @param heter_error a logical value, whether to generate the heterogeneous error; default as FALSE.
-#' return a list including the following components:
+#' @return return a list including the following components:
 #' \itemize{
 #'   \item \code{hbeta} - a M-length list composed by the estimated regression coefficient matrix for each modality;
 #'   \item \code{hA} - a M-length list composed by the loading matrix corresponding to study-shared factors for each modality;
@@ -75,7 +75,7 @@ gendata_mmgfm <- function (seed = 1,  nvec = c(300, 200),
     for(id in 1:length(pveclist[[ic]]) ){
       numvarmat[ic, id] <- pveclist[[ic]][id]
     }
-    set.seed(1)
+
     betaList[[ic]] <- matrix(rnorm(d*ptmp, sd=2), d, ptmp)
   }
   row.names(numvarmat) <- types

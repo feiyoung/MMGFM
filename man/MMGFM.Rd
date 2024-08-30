@@ -39,7 +39,9 @@ MMGFM(
 
 \item{verbose}{a logical value, whether output the information in iteration.}
 
-\item{seed}{an optional integer, specify the random seed for reproducibility in initialization.
+\item{seed}{an optional integer, specify the random seed for reproducibility in initialization.}
+}
+\value{
 return a list including the following components:
 \itemize{
   \item \code{hbeta} - a M-length list composed by the estimated regression coefficient matrix for each modality;
@@ -57,13 +59,13 @@ return a list including the following components:
   \item \code{ELBO} -  the ELBO value when algorithm stops;
   \item \code{ELBO_seq} - the sequence of ELBO values.
   \item \code{time_use} - the running time in model fitting of SpaCOAP;
-}}
+}
 }
 \description{
 Fit the high-dimensional multi-study multi-modality covariate-augmented generalized factor model via variational inference.
 }
 \details{
-If \code{init="MSFRVI"}, it will use the results from multi-study linear factor model as initial values; If \code{init="LFM"}, it will use the results from linear factor model by combing data from all studies as initials.
+If \code{init="MSFRVI"}, it will use the results from multi-study linear factor model in MultiCOAP package as initial values; If \code{init="LFM"}, it will use the results from linear factor model by combing data from all studies as initials.
 }
 \examples{
 q <- 3; qsvec<-rep(2,3)
@@ -83,5 +85,5 @@ str(reslist1)
 None
 }
 \seealso{
-\code{\link{MSFRVI}}
+None
 }
