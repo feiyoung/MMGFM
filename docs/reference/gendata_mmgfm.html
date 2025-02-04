@@ -127,21 +127,19 @@
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>return a list including the following components:</p><ul><li><p><code>hbeta</code> - a M-length list composed by the estimated regression coefficient matrix for each modality;</p></li>
-<li><p><code>hA</code> - a M-length list composed by the loading matrix corresponding to study-shared factors for each modality;</p></li>
-<li><p><code>hB</code> - a S-length list composed by a M-length loading matrix list corresponding to study-specified factors for each study;</p></li>
-<li><p><code>hF</code> - a S-length list composed by the posterior estimation of study-shared factor matrix for each study;</p></li>
-<li><p><code>hH</code> - a S-length list composed by the posterior estimation of study-specified factor matrix for each study;</p></li>
-<li><p><code>hSigma</code> - a S-length list composed by the estimated posterior variance of the study-shared factor;</p></li>
-<li><p><code>hPhi</code> - a S-length list composed by the estimated posterior variance of study-specified factor;</p></li>
-<li><p><code>hv</code> - a S-length list composed by a M-length vector list corresponding to the posterior estimation of study-specified and modality variable-shared factor for each study and modality;</p></li>
-<li><p><code>hzeta</code> - the estimated posterior variance for study-specified and modality variable-shared factor;</p></li>
-<li><p><code>hsigma2</code> - the estimated variance for study-specified and modality variable-shared factor;</p></li>
-<li><p><code>hinvLambda</code> - a S-length list composed by a M-length vector list corresponding to the inverse of the estimated variances of error;</p></li>
-<li><p><code>S</code> - the approximated posterior covariance for each row of F;</p></li>
-<li><p><code>ELBO</code> -  the ELBO value when algorithm stops;</p></li>
-<li><p><code>ELBO_seq</code> - the sequence of ELBO values.</p></li>
-<li><p><code>time_use</code> - the running time in model fitting of SpaCOAP;</p></li>
+    <p>return a list including the following components:</p><ul><li><p><code>XList</code> - a S-length list with each component a m-length list composed by a combined modality matrix of the same type modalities, which is the observed  matrix from each source/study and each modality, where m is the number of modality types.</p></li>
+<li><p><code>ZList</code> - a S-length list with each component a matrix that is the covariate matrix from each study.</p></li>
+<li><p><code>tauList</code> - a S-length list with each component a m-length list correponding the offset term for each combined modality of each study.</p></li>
+<li><p><code>A0List</code> - a M-length list composed by the loading matrix corresponding to study-shared factors for each modality;</p></li>
+<li><p><code>B0List</code> - a M-length list composed by the loading matrix list corresponding to study-specified factors for each modality;</p></li>
+<li><p><code>VList</code> - a S-length list composed by a M-length vector list corresponding to the  study-specified and modality variable-shared factor for each study and modality;</p></li>
+<li><p><code>F0List</code> - a S-length list composed by the study-shared factor matrix for each study;</p></li>
+<li><p><code>H0List</code> - a S-length list composed by the study-specified factor matrix for each study;</p></li>
+<li><p><code>betaList</code> - a M-length list composed by the true regression coefficient matrix for each modality;</p></li>
+<li><p><code>sigma_eps</code> - a positive scalar, the variance of error;</p></li>
+<li><p><code>numvarmat</code> - a m-by-T matrix with rownames modality types that specifies the variable number for each modality of each modality type, where m is the number of modality types, T is the maximum number of modalities for one of modality types.</p></li>
+<li><p><code>types</code> - a string vector, the modality types;</p></li>
+<li><p><code>Lam0</code> -  a S-length list composed by a M-length vector list corresponding to the variances of error;</p></li>
 </ul></div>
 
     <div id="ref-examples">
