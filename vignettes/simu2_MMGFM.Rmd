@@ -1,0 +1,165 @@
+---
+title: 'MMGFM: simulation2'
+author: "Wei Liu"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+ %\VignetteIndexEntry{MMGFM: simulation2}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette introduces the usage of MMGFM for the analysis of high-dimensional  multi-study multi-modality  data with additional covariates, by comparison with other methods.
+
+
+The package can be loaded with the command:
+```{r  eval = FALSE}
+library(MMGFM)
+```
+
+Next, we load some functions for subsequent use.
+```{r  eval = FALSE}
+source("https://raw.githubusercontent.com/feiyoung/MMGFM/refs/heads/main/simu_code/definedFunc.R")
+```
+
+## Generate the simulated data
+First, we generate the simulated data from three data sources and five modalities, with first modalities consisting of continuous variables and last three modalities composed by count variables.
+```{r  eval = FALSE}
+q <- 3
+qsvec  <- rep(2,3)
+sigma_eps <- 1
+datlist <- gendata_MM(seed = 1,  nvec = c(300, 200, 100),  
+                        pveclist = list('gaussian'=c(100, 200),'poisson'=c(50, 150, 200)),
+                        q = q,  d= 3,qs = qsvec,  rho = c(3, 2), rho_z=0.5,
+                        sigmavec=c(0, 0),  sigma_eps=sigma_eps)
+XList <- datlist$XList
+max(unlist(XList))
+print(str(XList))
+ZList <- datlist$ZList # covariates
+print(head(ZList[[1]]))
+tauList <- datlist$tauList # offset term
+numvarmat <- datlist$numvarmat
+```
+
+
+Fit the MMGFM model using the function `MMGFM()` in the R package `MMGFM`. Users can use `?MMGFM` to see the details about this function
+```{r  eval = FALSE}
+system.time({
+  tic <- proc.time()
+  reslist <- MMGFM(XList, ZList=ZList, numvarmat, q=q, qsvec = qsvec, init='MSFRVI')
+  toc <- proc.time()
+  time_MMGFM <- toc[3] - tic[3]
+})
+```
+
+
+Check the increased property of the envidence lower bound function.
+```{r  eval = FALSE}
+library(ggplot2)
+dat_iter <- data.frame(iter=1:length(reslist$ELBO_seq), ELBO=reslist$ELBO_seq)
+ggplot(data=dat_iter, aes(x=iter, y=ELBO)) + geom_line() + geom_point() + theme_bw(base_size = 20) 
+```
+
+We calculate the metrics to measure the estimation accuracy, where the mean trace statistic is used to measure the estimation accuracy of loading matrix and prediction accuracy of factor matrix, which is evaluated by the function `measurefun()` in the R package `GFM`, and the root of mean absolute error is adopted to measure the estimation error of beta.
+```{r  eval = FALSE}
+
+methodNames <- c("MMGFM", "GFM", "MRRR", "MSFR")
+n_methods <- length(methodNames)
+metricList <- list(F_tr = rep(NA, n_methods),
+                   H_tr = rep(NA,  n_methods),
+                   V_tr = rep(NA,  n_methods),
+                   A_tr = rep(NA, n_methods),
+                   B_tr = rep(NA,  n_methods),
+                   beta_norm=rep(NA,  n_methods),
+                   time = rep(NA,  n_methods))
+for(ii in seq_along(metricList)) names(metricList[[ii]]) <- methodNames
+metricList$F_tr[1] <- meanTr(reslist$hF, datlist$F0List)
+metricList$H_tr[1] <-meanTr(reslist$hH, datlist$H0List)
+metricList$V_tr[1] <-meanTr(lapply(reslist$hv, function(x) Reduce(cbind,x) ), datlist$VList)
+metricList$A_tr[1] <-metric_mean(AList=reslist$hA, datlist$A0List, align='unaligned', numvarmat = numvarmat)
+metricList$B_tr[1] <- mean(ms_metric_mean(reslist$hB, datlist$B0List, align='unaligned', numvarmat = numvarmat))
+metricList$beta_norm[1] <-normvec(Reduce(cbind, reslist$hbeta)- Reduce(cbind,datlist$betaList))
+metricList$time[1] <- reslist$time.use
+
+```
+
+
+## Compare with other methods
+
+We compare MMGFM with various prominent methods in the literature. They are (1)  Generalized factor model (Liu et al. 2023) implemented in the R package `GFM`; (2) Multi-response reduced-rank Poisson regression model (MMMR, Luo et al. 2018) implemented in `rrpack` R package. Because MultiCOAP cannot handle the data with continuous variables taking negative values, we do not compare with it in this example.
+
+(1). First, we implemented the generalized factor model (GFM) and record the metrics that measure the estimation accuracy and computational cost.
+
+```{r  eval = FALSE}
+options(warn = -1)
+res_gfm <- gfm_run(XList, numvarmat, q=q)
+metricList$F_tr[2] <- meanTr(res_gfm$hF, datlist$F0List)
+metricList$A_tr[2] <-metric_mean(AList=res_gfm$hA, datlist$A0List, align='unaligned', numvarmat = numvarmat)
+metricList$time[2] <- res_gfm$time.use
+```
+
+(2). Then, we implemented Multi-response reduced-rank Poisson regression model (MMMR) and recorded the metrics.  Here, we truncate values to ensure normal working of this function. Otherwise, it will produce error.
+```{r  eval = FALSE}
+res_mrrr <- mrrr_run(XList, ZList, numvarmat, q, truncflag=TRUE, trunc=500)
+metricList$F_tr[3] <- meanTr(res_mrrr$hF, datlist$F0List)
+metricList$A_tr[3] <- metric_mean(AList=res_mrrr$hA, datlist$A0List, align='unaligned', numvarmat = numvarmat)
+metricList$beta_norm[3] <-normvec(res_mrrr$hbeta - Reduce(cbind,datlist$betaList))
+metricList$time[3] <- res_mrrr$time.use
+```
+
+(3) Thirdly, we implemented the  zero-inflated Poisson factor model:
+```{r  eval = FALSE}
+source("https://raw.githubusercontent.com/feiyoung/MMGFM/refs/heads/main/simu_code/MSFR_main_R_MSFR_V1.R")
+## To produce results in limited time, here we set maxIter=5 Even Set maxIter=1e4, the result is also not good.
+res_msfr <- MSFR_run(XList, ZList, numvarmat, q, qs=qsvec, maxIter=5, load.source=TRUE, log.transform=TRUE)
+metricList$F_tr[4] <- meanTr(res_msfr$hF, datlist$F0List)
+metricList$H_tr[4] <- meanTr(res_msfr$hH, datlist$H0List)
+metricList$A_tr[4] <- metric_mean(AList=res_msfr$hA, datlist$A0List, align='unaligned', numvarmat = numvarmat)
+metricList$B_tr[4] <- mean(ms_metric_mean(res_msfr$hB, datlist$B0List, align='unaligned', numvarmat = numvarmat))
+metricList$beta_norm[4] <- normvec(t(res_msfr$hbeta)- Reduce(cbind,datlist$betaList))
+metricList$time[4] <- res_msfr$time.use
+```
+
+
+
+## Comparison of performance
+
+Next, we summarized the metrics for MMGFM and other compared methods in a dataframe object. We observed that MMGFM achieves better estimation accuracy for the quantities of interest.
+
+```{r  eval = FALSE}
+mat.metric <- round(Reduce(rbind, metricList),3)
+row.names(mat.metric) <- names(metricList)
+
+dat_metric <- as.data.frame(mat.metric)
+DT::datatable(dat_metric)
+```
+
+### Choose number of factors
+The implementation of MMGFM necessitates identifying the numbers of study-shared ($q$) and study-specific ($q_s$) factors. Within the context of multi-study multi-modality data, the study-shared factor part, which aggregates information from all data sources, generally  exhibits a stronger signal compared to the study-specific factor parts. To account for this characteristic, we propose a step-wise singular value ratio (SVR) method.
+```{r  eval = FALSE}
+
+qqlist <- selectFac.MMGFM(XList, ZList=ZList, numvarmat, q.max=6, qsvec.max = rep(4,3)) 
+str(qqlist)
+```
+
+Then, we compare the estimated number of factors and the ground truth, which shows the criterion works well.
+```{r  eval = FALSE}
+print(c('true q'= q, ' est. q'=qqlist$q))
+cat('est. qs=',qqlist$qs.vec, '\n')
+cat('true qs=', qsvec, '\n')
+```
+
+
+<details>
+  <summary>**Session Info**</summary>
+```{r}
+sessionInfo()
+```
+</details>

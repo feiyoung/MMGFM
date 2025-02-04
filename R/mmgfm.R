@@ -6,8 +6,8 @@
 # pkgdown::build_site()
 # pkgdown::build_home()
 # pkgdown::build_reference()
-# pkgdown::build_article("COAPsimu")
-# pkgdown::build_article("ProFASTdlpfc2")
+# pkgdown::build_article("simu_MMGFM")
+# pkgdown::build_article("simu2_MMGFM")
 
 # rmarkdown::render('./vignettes_PDF/COAPsimu.Rmd', output_format=c('html_document'))
 # rmarkdown::render('./vignettes_PDF/COAPsimu.Rmd', output_format=c('pdf_document'), clean = F)

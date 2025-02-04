@@ -1,0 +1,7 @@
+pandoc: 3.1.11
+pkgdown: 2.1.1
+pkgdown_sha: ~
+articles:
+  simu_MMGFM: simu_MMGFM.html
+  simu2_MMGFM: simu2_MMGFM.html
+last_built: 2025-02-04T12:28Z
