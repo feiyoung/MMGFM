@@ -14,7 +14,7 @@ Latent factor models that integrate data from multiple sources/studies or modali
 
 
 
-Check out our [Biometric paper](https://doi.org/10.1093/biomtc/ujaf107)  [Package Website](https://feiyoung.github.io/MMGFM/index.html) for a more complete description of the methods and analyses. 
+Check out our [Biometric paper](https://doi.org/10.1093/biomtc/ujaf107) and [Package Website](https://feiyoung.github.io/MMGFM/index.html) for a more complete description of the methods and analyses. 
 
 For more details, see:
 
