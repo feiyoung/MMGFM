@@ -14,10 +14,18 @@ Latent factor models that integrate data from multiple sources/studies or modali
 
 
 
-Check out  [Package Website](https://feiyoung.github.io/MMGFM/index.html) for a more complete description of the methods and analyses. 
+Check out our [Biometric paper](https://doi.org/10.1093/biomtc/ujaf107)  [Package Website](https://feiyoung.github.io/MMGFM/index.html) for a more complete description of the methods and analyses. 
+
+For more details, see:
+
+- [Liu, W., & Zhong, Q. (2025). High-dimensional multi-study multi-modality covariate-augmented generalized factor model. Biometrics, 81(3), ujaf107.](https://doi.org/10.1093/biomtc/ujaf107)
+
+
 
 # Installation
 "MMGFM" depends on the 'Rcpp' and 'RcppArmadillo' package, which requires appropriate setup of computer. For the users that have set up system properly for compiling C++ files, the following installation command will work.
+
+
 ```{Rmd}
 ## Method 1：
 if (!require("remotes", quietly = TRUE))
