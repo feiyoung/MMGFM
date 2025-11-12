@@ -2,7 +2,7 @@ Package: MMGFM
 Type: Package
 Title: Multi-Study Multi-Modality Generalized Factor Model
 Version: 1.2.0
-Date: 2025-07-29
+Date: 2025-11-12
 Authors@R: 
     c(person(given = "Wei",
              family = "Liu",
@@ -33,4 +33,4 @@ LinkingTo:
     RcppArmadillo
 Encoding: UTF-8
 VignetteBuilder: knitr
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2

@@ -18,9 +18,17 @@ mat2list <- function(B, pvec, by_row=TRUE){
   pcum = c(0, cumsum(pvec))
   for(i in 1:length(pvec)){
     if(by_row){
-      Blist[[i]] <- B[(pcum[i]+1):pcum[i+1],]
+      if(ncol(B)==1){ ## handle this special case with ncol==1
+        Blist[[i]] <- matrix(B[(pcum[i]+1):pcum[i+1],], ncol=1)
+      }else{
+        Blist[[i]] <- B[(pcum[i]+1):pcum[i+1],]
+      }
     }else{
-      Blist[[i]] <- B[, (pcum[i]+1):pcum[i+1]]
+      if(nrow(B)==1){
+        Blist[[i]] <- matrix(B[, (pcum[i]+1):pcum[i+1]], nrow=1)
+      }else{
+        Blist[[i]] <- B[, (pcum[i]+1):pcum[i+1]]
+      }
     }
   }
   return(Blist)
@@ -223,6 +231,7 @@ MMGFM <- function(XList, ZList,  numvarmat, tauList=NULL, q=15, qsvec = rep(2, l
   }
 
   S <- length(XList)
+  if(S<2) stop("MMGFM: the number of studies must be greater than 1!")
   ### Check input arguments
   flag <- sapply(XList, function(x) inherits(x, "list"))
   if(!all(flag)) stop("MMGFM: each component of XList must be a list consisting of each matrix for each modality type!")
